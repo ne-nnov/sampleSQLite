@@ -11,6 +11,9 @@
 #include "model_counters.h"
 #include "model_dataBase.h"
 
+// thread includes
+#include "thread_manager.h"
+
 // Qt includes
 #include <QGridLayout>
 #include <QHeaderView>
@@ -22,7 +25,8 @@
 //-----------------------------------------------------------------------------
 app_widgetMain::app_widgetMain(QWidget* parent, bool advancedMode)
   : QWidget(parent),
-  m_model(nullptr)
+  m_model(nullptr),
+  m_threadManager(nullptr)
 {
   setWindowTitle("C++ (Qt) Qualification Test");
   QGridLayout* layout = new QGridLayout(this);
@@ -103,6 +107,12 @@ void app_widgetMain::setModel(model_counters* model)
 }
 
 //-----------------------------------------------------------------------------
+void app_widgetMain::setThreadManager(thread_manager* manager)
+{
+  m_threadManager = manager;
+}
+
+//-----------------------------------------------------------------------------
 void app_widgetMain::updateFrequency()
 {
   m_frequencyLbl->setText(QString::number(m_model->getFrequency()));
@@ -113,7 +123,7 @@ void app_widgetMain::onStart()
 {
   if (!m_model)
     return;
-  m_model->startCounters();
+  m_threadManager->startCounters();
 }
 
 //-----------------------------------------------------------------------------
@@ -121,7 +131,7 @@ void app_widgetMain::onStop()
 {
   if (!m_model)
     return;
-  m_model->stopCounters();
+  m_threadManager->stopCounters();
 }
 
 //-----------------------------------------------------------------------------

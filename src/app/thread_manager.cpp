@@ -17,7 +17,8 @@
 
 //-----------------------------------------------------------------------------
 thread_manager::thread_manager(model_counters* model)
-: m_model(model)
+: m_model(model),
+  m_countersActive(false)
 {
 }
 
@@ -29,7 +30,25 @@ void thread_manager::launchThread()
 }
 
 //-----------------------------------------------------------------------------
+void thread_manager::stopCounters()
+{
+  m_countersActive = false;
+}
+
+//-----------------------------------------------------------------------------
+void thread_manager::startCounters()
+{
+  m_countersActive = true;
+}
+
+//-----------------------------------------------------------------------------
 void thread_manager::incrementCounters()
 {
-  m_model->printMessage();
+  while (true)
+  {
+    if (!m_countersActive)
+      continue;
+
+    m_model->incrementCounters();
+  }
 }

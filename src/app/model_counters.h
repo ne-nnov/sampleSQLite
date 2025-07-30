@@ -6,9 +6,10 @@
 #pragma once
 
 // STL includes
-#include <map>
+#include <atomic>
+#include <vector>
 
-typedef std::map<int, int> CountersMap; //!< typedef mapping integer to integer.
+typedef std::vector<int> CountersMap; //!< typedef mapping vector to integer.
 
 //! This class manages a set of counters, providing methods to:
 //! - Add new counters;
@@ -35,14 +36,8 @@ public:
   //! Returns the current model values.
   const CountersMap& getCounters() const { return m_counters; }
 
-  //! Tests method to print some counter information in endless loop.
-  void printMessage();
-
-  //! Stops the counters increase.
-  void stopCounters();
-
-  //! Continues the counters increase.
-  void startCounters();
+  //! Increments all values in the conteriner of counters.
+  void incrementCounters();
 
   //! Returns the counters' increase frequency, calculated by the rule:
   //! frequency = ((sum of counters)t1 + (sum of counters)t0) / (t1-t0).
@@ -53,7 +48,5 @@ public:
   static int defaultValue() { return 0; }
 
 private:
-  bool m_countersActive; //!< state whether the counters are increased at the moment.
-
   CountersMap m_counters; //!< container of values: a unique index to a value.
 };

@@ -9,22 +9,20 @@
 // Qt includes
 
 // STL includes
+#include <algorithm>
 #include <iostream>
+
+#define DEBUG_CODE
 
 //-----------------------------------------------------------------------------
 model_counters::model_counters()
-: m_countersActive (false)
 {
 }
 
 //-----------------------------------------------------------------------------
 void model_counters::addCounter()
 {
-  int position = 0;
-  if (!m_counters.empty())
-    position = m_counters.rbegin()->first + 1;
-
-  m_counters[position] = model_counters::defaultValue();
+  m_counters.push_back(model_counters::defaultValue());
 }
 
 //-----------------------------------------------------------------------------
@@ -33,51 +31,26 @@ bool model_counters::removeCounter(const int position)
   if (m_counters.empty())
     return false;
 
-  int lastPos = m_counters.rbegin()->first;
-  if (position == -1 || position == m_counters.rbegin()->first)
-  {
-    m_counters.erase(m_counters.rbegin()->first);
-  }
+  if (position == -1)
+    m_counters.erase(m_counters.begin() + m_counters.size() - 1);
   else
-  {
-    CountersMap newMap;
-    bool isItemRemoved = false;
-    for (const auto& [key, value] : m_counters)
-    {
-      if (key == position)
-        isItemRemoved = true;
-      else
-        newMap[isItemRemoved ? key - 1 : key] = value;
-    }
-    m_counters = newMap;
-  }
+    m_counters.erase(m_counters.begin() + position);
 
   return true;
 }
 
 //-----------------------------------------------------------------------------
-void model_counters::printMessage()
+void model_counters::incrementCounters()
 {
-  int counter = 0;
-  while (true)
+  std::transform(std::begin(m_counters), std::end(m_counters), std::begin(m_counters), [](int x) {return x + 1; });
+
+#ifdef DEBUG_CODE
+  std::cout << "incrementCounters:" << std::endl;
+  for (auto& element : m_counters)
   {
-    if (!m_countersActive)
-      continue;
-
-    std::cout << "printMessage counter: " << counter++ << std::endl;
+    std::cout << element << std::endl;
   }
-}
-
-//-----------------------------------------------------------------------------
-void model_counters::stopCounters()
-{
-  m_countersActive = false;
-}
-
-//-----------------------------------------------------------------------------
-void model_counters::startCounters()
-{
-  m_countersActive = true;
+#endif
 }
 
 //-----------------------------------------------------------------------------

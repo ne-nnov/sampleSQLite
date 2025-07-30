@@ -16,6 +16,7 @@
 // Qt includes
 #include <QApplication>
 
+#include <iostream>
 
 int main(int argc, char* argv[])
 {
@@ -28,14 +29,15 @@ int main(int argc, char* argv[])
 
   // Create data model
   model_counters* model = new model_counters();
-  model->startCounters();
 
   // Constructs the new thread and runs it. Does not block execution.
-  thread_manager manager(model);
-  manager.launchThread();
+  thread_manager* thmanager = new thread_manager(model);
+  thmanager->launchThread();
+  thmanager->startCounters();
 
   app_widgetMain* mainWidget = new app_widgetMain(0, true);
   mainWidget->setModel(model);
+  mainWidget->setThreadManager(thmanager);
 
   mainWidget->resize(300, 600);
   mainWidget->show();
@@ -43,6 +45,7 @@ int main(int argc, char* argv[])
   int state = app.exec();
 
   delete model;
+  delete thmanager;
 
   return state;
 }

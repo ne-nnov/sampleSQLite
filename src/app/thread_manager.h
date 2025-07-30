@@ -8,6 +8,7 @@
 // Qt includes
 
 // STL includes
+#include <atomic>
 #include <string>
 
 class model_counters;
@@ -27,10 +28,17 @@ public:
   //! It creates an instance of a thread and starts it.
   void launchThread();
 
+  //! Stops the counters increase.
+  void stopCounters();
+
+  //! Continues the counters increase.
+  void startCounters();
+
 protected:
   //! Task to increase counters of the model.
   virtual void incrementCounters();
 
 private:
   model_counters* m_model; //!< model to be modified by thread calls.
+  std::atomic<bool> m_countersActive; //!< state whether the counters are increased at the moment.
 };

@@ -9,6 +9,8 @@
 #include <QWidget>
 
 class model_counters;
+class thread_manager;
+
 class QLabel;
 class QPushButton;
 class QTableView;
@@ -35,6 +37,10 @@ public:
   //! @param[in] model Data retrieval model.
   void setModel(model_counters* model);
 
+  //! Set the thread manager.
+  //! @param[in] manager thread management controller.
+  void setThreadManager(thread_manager* manager);
+
   //! Updates text of label, that shows frequency value.
   void updateFrequency();
 
@@ -56,6 +62,7 @@ private slots:
 
 private:
   model_counters* m_model;        //!< model containing the current counter data.
+  thread_manager* m_threadManager; //!< thread management controller.
 
   QLabel*         m_frequencyLbl; //!< control showing the current frequency value.
 
