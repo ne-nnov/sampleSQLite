@@ -19,31 +19,40 @@ app_tableModel::app_tableModel(QObject* parent)
 }
 
 //-----------------------------------------------------------------------------
+void app_tableModel::emitModelChanged()
+{
+  emit layoutChanged();
+}
+
+//-----------------------------------------------------------------------------
 int app_tableModel::rowCount(const QModelIndex& parent) const
 {
-  return 3;
+  return m_model ? m_model->getCounters().size() : 0;
 }
 
 //-----------------------------------------------------------------------------
 int app_tableModel::columnCount(const QModelIndex& parent) const
 {
-  return 2;
+  return 1;
 }
 
 //-----------------------------------------------------------------------------
 QVariant app_tableModel::data(const QModelIndex& index, int role) const
 {
-  if (role == Qt::DisplayRole)
-    return "data value";
+  if (!m_model || role != Qt::DisplayRole)
+    return QVariant();
 
-  return QVariant();
+  if (index.row() > m_model->getCounters().size())
+    return QVariant();
+
+  return m_model->getCounters().at(index.row());
 }
 
 //-----------------------------------------------------------------------------
 QVariant app_tableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-    return section == 0 ? "Id" : "Counter";
+    return "Counter";
 
   return QAbstractTableModel::headerData(section, orientation, role);
 }

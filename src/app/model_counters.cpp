@@ -18,6 +18,44 @@ model_counters::model_counters()
 }
 
 //-----------------------------------------------------------------------------
+void model_counters::addCounter()
+{
+  int position = 0;
+  if (!m_counters.empty())
+    position = m_counters.rbegin()->first + 1;
+
+  m_counters[position] = model_counters::defaultValue();
+}
+
+//-----------------------------------------------------------------------------
+bool model_counters::removeCounter(const int position)
+{
+  if (m_counters.empty())
+    return false;
+
+  int lastPos = m_counters.rbegin()->first;
+  if (position == -1 || position == m_counters.rbegin()->first)
+  {
+    m_counters.erase(m_counters.rbegin()->first);
+  }
+  else
+  {
+    CountersMap newMap;
+    bool isItemRemoved = false;
+    for (const auto& [key, value] : m_counters)
+    {
+      if (key == position)
+        isItemRemoved = true;
+      else
+        newMap[isItemRemoved ? key - 1 : key] = value;
+    }
+    m_counters = newMap;
+  }
+
+  return true;
+}
+
+//-----------------------------------------------------------------------------
 void model_counters::printMessage()
 {
   int counter = 0;

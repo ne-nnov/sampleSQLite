@@ -21,7 +21,8 @@
 
 //-----------------------------------------------------------------------------
 app_widgetMain::app_widgetMain(QWidget* parent, bool advancedMode)
-  : QWidget(parent)
+  : QWidget(parent),
+  m_model(nullptr)
 {
   setWindowTitle("C++ (Qt) Qualification Test");
   QGridLayout* layout = new QGridLayout(this);
@@ -43,9 +44,10 @@ app_widgetMain::app_widgetMain(QWidget* parent, bool advancedMode)
 
   // model table
   m_modelTable = new QTableView(this);
+  m_modelTable->setSelectionMode(QAbstractItemView::SingleSelection);
+  m_modelTable->setSelectionBehavior(QAbstractItemView::SelectRows);
   app_tableModel* dataModel = new app_tableModel(this);
   m_modelTable->setModel(dataModel);
-  m_modelTable->setColumnHidden(0, !advancedMode);
   layout->addWidget(m_modelTable, 1, 0, 1, 3);
 
   // stop/start buttons
@@ -109,12 +111,16 @@ void app_widgetMain::updateFrequency()
 //-----------------------------------------------------------------------------
 void app_widgetMain::onStart()
 {
+  if (!m_model)
+    return;
   m_model->startCounters();
 }
 
 //-----------------------------------------------------------------------------
 void app_widgetMain::onStop()
 {
+  if (!m_model)
+    return;
   m_model->stopCounters();
 }
 
@@ -127,11 +133,24 @@ void app_widgetMain::onSQLite()
 //-----------------------------------------------------------------------------
 void app_widgetMain::onAdd()
 {
+  if (!m_model)
+    return;
+
+  m_model->addCounter();
+  dynamic_cast<app_tableModel*>(m_modelTable->model())->emitModelChanged();
 }
 
 //-----------------------------------------------------------------------------
 void app_widgetMain::onRemove()
 {
+  if (!m_model)
+    return;
+
+  QModelIndexList selectedRows = m_modelTable->selectionModel()->selectedRows();
+  int rowSelectedId = selectedRows.empty() ? -1 : selectedRows.first().row();
+
+  m_model->removeCounter(rowSelectedId);
+  dynamic_cast<app_tableModel*>(m_modelTable->model())->emitModelChanged();
 }
 
 //-----------------------------------------------------------------------------

@@ -5,6 +5,11 @@
 
 #pragma once
 
+// STL includes
+#include <map>
+
+typedef std::map<int, int> CountersMap; //!< typedef mapping integer to integer.
+
 //! This class manages a set of counters, providing methods to:
 //! - Add new counters;
 //! - Remove existing counters;
@@ -18,13 +23,25 @@ public:
   //! Destructor.
   ~model_counters() {}
 
-  //! Test method to print some counter information in endless loop.
+  //! Appendss a new counter.
+  void addCounter();
+
+  //! Removes the counter located at the specified position.
+  //! Special value -1 removes the last element of the table.
+  //! @param position the position in the container of counters.
+  //! @return false if action failed.
+  bool removeCounter(const int position);
+
+  //! Returns the current model values.
+  const CountersMap& getCounters() const { return m_counters; }
+
+  //! Tests method to print some counter information in endless loop.
   void printMessage();
 
   //! Stops the counters increase.
   void stopCounters();
 
-  //! Continue the counters increase.
+  //! Continues the counters increase.
   void startCounters();
 
   //! Returns the counters' increase frequency, calculated by the rule:
@@ -32,6 +49,11 @@ public:
   //! @return calculated frequency value.
   int getFrequency() const;
 
+  //! Returns the default value for inserted counters.
+  static int defaultValue() { return 0; }
+
 private:
-  bool m_countersActive; //! state whether the counters are increased at the moment.
+  bool m_countersActive; //!< state whether the counters are increased at the moment.
+
+  CountersMap m_counters; //!< container of values: a unique index to a value.
 };

@@ -25,6 +25,11 @@ public:
   //! @param[in] model Data retrieval model.
   void setModel(model_counters* model) { m_model = model; }
 
+  //! Emits model update signals for dependent UI controls.
+  void emitModelChanged();
+
+  //! Reimplemented QAbstractTableModel virtual methods
+
   //! Returns the data stored under the given role for the item referred to by the index.
   //! @param[in] parent index that indicates the location of an item in the model.
   //! @return number of rows.
