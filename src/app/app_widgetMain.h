@@ -52,6 +52,8 @@ private slots:
   //! Shows table that shows SQLite data base content.
   //! (Available only in 'advanced' mode)
   void onSQLite();
+  //! Appends many rows in the table.
+  void onAddMany();
 
   //! Appends a new row in the table.
   void onAdd();
@@ -71,6 +73,7 @@ private:
 
   QPushButton*    m_startBtn;     //!< control starting counter increase.
   QPushButton*    m_stopBtn;      //!< control to stop counter increase.
+  QPushButton*    m_addManyBtn;   //!< control to add many rows in the table.
   QPushButton*    m_dbTableBtn;   //!< control to show control showing SQLite table.
 
   QPushButton*    m_addBtn;       //!< control to add a new row in the table.

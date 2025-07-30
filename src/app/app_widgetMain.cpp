@@ -22,6 +22,8 @@
 #include <QSqlTableModel>
 #include <QTableView>
 
+const int ADD_MANY_VALUES = 1000;
+
 //-----------------------------------------------------------------------------
 app_widgetMain::app_widgetMain(QWidget* parent, bool advancedMode)
   : QWidget(parent),
@@ -48,7 +50,7 @@ app_widgetMain::app_widgetMain(QWidget* parent, bool advancedMode)
 
   // model table
   m_modelTable = new QTableView(this);
-  m_modelTable->setSelectionMode(QAbstractItemView::SingleSelection);
+  m_modelTable->setSelectionMode(QAbstractItemView::MultiSelection);
   m_modelTable->setSelectionBehavior(QAbstractItemView::SelectRows);
   app_tableModel* dataModel = new app_tableModel(this);
   m_modelTable->setModel(dataModel);
@@ -59,6 +61,7 @@ app_widgetMain::app_widgetMain(QWidget* parent, bool advancedMode)
   {
     m_startBtn = new QPushButton("start", this);
     m_stopBtn = new QPushButton("stop", this);
+    m_addManyBtn = new QPushButton("add 1000", this);
     m_dbTableBtn = new QPushButton("SQLite", this);
     m_dbTableBtn->setCheckable(true);
     m_dbTableBtn->setChecked(false);
@@ -66,10 +69,12 @@ app_widgetMain::app_widgetMain(QWidget* parent, bool advancedMode)
     connect(m_startBtn, SIGNAL(clicked()), this, SLOT(onStart()));
     connect(m_stopBtn, SIGNAL(clicked()), this, SLOT(onStop()));
     connect(m_dbTableBtn, SIGNAL(clicked()), this, SLOT(onSQLite()));
+    connect(m_addManyBtn, SIGNAL(clicked()), this, SLOT(onAddMany()));
 
     layout->addWidget(m_startBtn, 2, 0);
     layout->addWidget(m_stopBtn, 2, 1);
     layout->addWidget(m_dbTableBtn, 2, 2);
+    layout->addWidget(m_addManyBtn, 3, 0);
 
     // data base's content table
     QSqlTableModel* model = new QSqlTableModel(this);
@@ -81,7 +86,7 @@ app_widgetMain::app_widgetMain(QWidget* parent, bool advancedMode)
 
     m_SQLiteTable = new QTableView(this);
     m_SQLiteTable->setModel(model);
-    layout->addWidget(m_SQLiteTable, 3, 0, 1, 3);
+    layout->addWidget(m_SQLiteTable, 4, 0, 1, 3);
     onSQLite();
   }
 
@@ -94,9 +99,9 @@ app_widgetMain::app_widgetMain(QWidget* parent, bool advancedMode)
   connect(m_removeBtn, SIGNAL(clicked()), this, SLOT(onRemove()));
   connect(m_saveBtn, SIGNAL(clicked()), this, SLOT(onSave()));
 
-  layout->addWidget(m_addBtn, 4, 0);
-  layout->addWidget(m_removeBtn, 4, 1);
-  layout->addWidget(m_saveBtn, 4, 2);
+  layout->addWidget(m_addBtn,    5, 0);
+  layout->addWidget(m_removeBtn, 5, 1);
+  layout->addWidget(m_saveBtn,   5, 2);
 }
 
 //-----------------------------------------------------------------------------
@@ -141,6 +146,18 @@ void app_widgetMain::onSQLite()
 }
 
 //-----------------------------------------------------------------------------
+void app_widgetMain::onAddMany()
+{
+  if (!m_model)
+    return;
+
+  for (int i = 0; i < ADD_MANY_VALUES; i++)
+    m_model->addCounter();
+
+  dynamic_cast<app_tableModel*>(m_modelTable->model())->emitModelChanged();
+}
+
+//-----------------------------------------------------------------------------
 void app_widgetMain::onAdd()
 {
   if (!m_model)
@@ -157,9 +174,29 @@ void app_widgetMain::onRemove()
     return;
 
   QModelIndexList selectedRows = m_modelTable->selectionModel()->selectedRows();
-  int rowSelectedId = selectedRows.empty() ? -1 : selectedRows.first().row();
+  if (selectedRows.empty())
+    m_model->removeCounter(-1);
+  else if (selectedRows.size() == 1)
+  {
+    m_model->removeCounter(selectedRows.first().row());
+  }
+  else
+  {
+    std::list<int> rowIds;
+    for (int i = 0; i < selectedRows.size(); i++)
+    {
+      rowIds.push_back(selectedRows.at(i).row());
+    }
+    rowIds.unique();
+    rowIds.sort();
+    rowIds.reverse();
 
-  m_model->removeCounter(rowSelectedId);
+    for (int rowId : rowIds)
+    {
+      m_model->removeCounter(rowId);
+    }
+  }
+
   dynamic_cast<app_tableModel*>(m_modelTable->model())->emitModelChanged();
 }
 
