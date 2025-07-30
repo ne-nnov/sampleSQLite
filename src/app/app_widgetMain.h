@@ -3,6 +3,8 @@
 // Author: Natalia Ermolaeva
 //-----------------------------------------------------------------------------
 
+#pragma once
+
 // Qt includes
 #include <QWidget>
 

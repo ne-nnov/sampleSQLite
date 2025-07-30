@@ -5,6 +5,7 @@
 
 // Own includes
 #include "app_widgetMain.h"
+#include "app_tableModel.h"
 
 // model includes
 #include "model_counters.h"
@@ -12,6 +13,7 @@
 
 // Qt includes
 #include <QGridLayout>
+#include <QHeaderView>
 #include <QLabel>
 #include <QPushButton>
 #include <QSqlTableModel>
@@ -41,7 +43,9 @@ app_widgetMain::app_widgetMain(QWidget* parent, bool advancedMode)
 
   // model table
   m_modelTable = new QTableView(this);
-  //view->setModel(model);
+  app_tableModel* dataModel = new app_tableModel(this);
+  m_modelTable->setModel(dataModel);
+  m_modelTable->setColumnHidden(0, !advancedMode);
   layout->addWidget(m_modelTable, 1, 0, 1, 3);
 
   // stop/start buttons
@@ -62,7 +66,7 @@ app_widgetMain::app_widgetMain(QWidget* parent, bool advancedMode)
     layout->addWidget(m_dbTableBtn, 2, 2);
 
     // data base's content table
-    QSqlTableModel* model = new QSqlTableModel();
+    QSqlTableModel* model = new QSqlTableModel(this);
     model->setTable(model_dataBase::tableName());
     model->setEditStrategy(QSqlTableModel::OnManualSubmit);
     model->select();
@@ -93,6 +97,7 @@ app_widgetMain::app_widgetMain(QWidget* parent, bool advancedMode)
 void app_widgetMain::setModel(model_counters* model)
 {
   m_model = model;
+  dynamic_cast<app_tableModel*>(m_modelTable->model())->setModel(model);
 }
 
 //-----------------------------------------------------------------------------

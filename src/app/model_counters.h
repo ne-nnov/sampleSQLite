@@ -3,6 +3,8 @@
 // Author: Natalia Ermolaeva
 //-----------------------------------------------------------------------------
 
+#pragma once
+
 //! This class manages a set of counters, providing methods to:
 //! - Add new counters;
 //! - Remove existing counters;
