@@ -16,12 +16,17 @@ public:
   //! Destructor.
   ~model_dataBase() {}
 
-  //! 
-  static bool connectToDatabase(const bool toInit);
+  //! It connects the application to SQLite data base.
+  //! @param[in] fileName A name of the data base.
+  //! @param[in] toInit flag whether to init the data base with default values.
+  //! @return boolean value of open success.
 
-  //!
+  static bool connectToDatabase(const QString& fileName,
+                                const bool     toInit);
+
+  //! Returns the name of the data base main table.
   static QString tableName() { return "Counter"; }
 
-  //!
+  //! Returns the name of the data base.
   static QString dataBaseName() { return "testSqlBase.sqlite3"; }
 };

@@ -23,7 +23,8 @@ model_dataBase::model_dataBase()
 }
 
 //-----------------------------------------------------------------------------
-bool model_dataBase::connectToDatabase(const bool toInit)
+bool model_dataBase::connectToDatabase(const QString& fileName,
+                                       const bool toInit)
 {
   QSqlDatabase database = QSqlDatabase::database();
   if (!database.isValid()) {
@@ -35,17 +36,6 @@ bool model_dataBase::connectToDatabase(const bool toInit)
       return false;
     }
   }
-
-  const QDir writeDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-  if (!writeDir.mkpath("."))
-  {
-    std::cout << "Failed to create writable directory at"
-              << qPrintable(writeDir.absolutePath()) << std::endl;
-    return false;
-  }
-
-  // Ensure that we have a writable location on all devices.
-  const QString fileName = writeDir.absolutePath() + "/" + dataBaseName();
 
   // When using the SQLite driver, open() will create the SQLite database if it doesn't exist.
   database.setDatabaseName(fileName);

@@ -18,4 +18,18 @@ public:
 
   //! Test method to print some counter information in endless loop.
   void printMessage();
+
+  //! Stops the counters increase.
+  void stopCounters();
+
+  //! Continue the counters increase.
+  void startCounters();
+
+  //! Returns the counters' increase frequency, calculated by the rule:
+  //! frequency = ((sum of counters)t1 + (sum of counters)t0) / (t1-t0).
+  //! @return calculated frequency value.
+  int getFrequency() const;
+
+private:
+  bool m_countersActive; //! state whether the counters are increased at the moment.
 };

@@ -7,17 +7,25 @@
 #include <QWidget>
 
 class model_counters;
+class QLabel;
+class QPushButton;
+class QTableView;
 
 //! This class creates the application's main window and contains a table along with
 //! buttons for interacting with it. The buttons provide functionality to:
 //! add a row, delete a row, and save data to the database.
+//! Additionaly the advanced mode is impelemented. It contains actions to:
+//! - stop/start counters;
+//! - display the data base table content.
 class app_widgetMain : public QWidget
 {
   Q_OBJECT
 
 public:
   //! Constructor.
-  app_widgetMain(QWidget* parent = 0);
+  //! @param[in] parent parent widget.
+  //! @param[in] advancedMode flag whether auxiliary controls are shown.
+  app_widgetMain(QWidget* parent, bool advancedMode);
   //! Destructor.
   ~app_widgetMain() {}
 
@@ -25,6 +33,38 @@ public:
   //! @param[in] model Data retrieval model.
   void setModel(model_counters* model);
 
+  //! Updates text of label, that shows frequency value.
+  void updateFrequency();
+
+private slots:
+  //! Starts counters increase. (Available only in 'advanced' mode)
+  void onStart();
+  //! Stops counters increase. (Available only in 'advanced' mode)
+  void onStop();
+  //! Shows table that shows SQLite data base content.
+  //! (Available only in 'advanced' mode)
+  void onSQLite();
+
+  //! Appends a new row in the table.
+  void onAdd();
+  //! Removes selected row of the table.
+  void onRemove();
+  //! Saves the table content to SQLite data base.
+  void onSave();
+
 private:
-  model_counters* m_model; //<! data retrieval model.
+  model_counters* m_model;        //!< model containing the current counter data.
+
+  QLabel*         m_frequencyLbl; //!< control showing the current frequency value.
+
+  QTableView*     m_modelTable;   //!< control showing the current counter data.
+  QTableView*     m_SQLiteTable;  //!< control showing SQLite data base data.
+
+  QPushButton*    m_startBtn;     //!< control starting counter increase.
+  QPushButton*    m_stopBtn;      //!< control to stop counter increase.
+  QPushButton*    m_dbTableBtn;   //!< control to show control showing SQLite table.
+
+  QPushButton*    m_addBtn;       //!< control to add a new row in the table.
+  QPushButton*    m_removeBtn;    //!< control to remove the selected row from the table.
+  QPushButton*    m_saveBtn;      //!< control to save table of counters into data base.
 };
