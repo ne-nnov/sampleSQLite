@@ -7,6 +7,7 @@
 
 // Qt includes
 #include <QWidget>
+#include <QTimer>
 
 class model_counters;
 class thread_manager;
@@ -31,7 +32,7 @@ public:
   //! @param[in] advancedMode flag whether auxiliary controls are shown.
   app_widgetMain(QWidget* parent, bool advancedMode);
   //! Destructor.
-  ~app_widgetMain() {}
+  ~app_widgetMain();
 
   //! Set the source data model.
   //! @param[in] model Data retrieval model.
@@ -62,9 +63,14 @@ private slots:
   //! Saves the table content to SQLite data base.
   void onSave();
 
+  //! Updates table values and frequency label according to the model content.
+  void onTimer();
+
 private:
   model_counters* m_model;        //!< model containing the current counter data.
   thread_manager* m_threadManager; //!< thread management controller.
+
+  QTimer          m_timer;        //!< timer to update UI controls by the model.
 
   QLabel*         m_frequencyLbl; //!< control showing the current frequency value.
 

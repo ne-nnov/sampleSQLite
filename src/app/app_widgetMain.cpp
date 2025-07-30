@@ -102,6 +102,15 @@ app_widgetMain::app_widgetMain(QWidget* parent, bool advancedMode)
   layout->addWidget(m_addBtn,    5, 0);
   layout->addWidget(m_removeBtn, 5, 1);
   layout->addWidget(m_saveBtn,   5, 2);
+
+  connect(&m_timer, SIGNAL(timeout()), SLOT(onTimer()));
+  m_timer.start(100);
+}
+
+//-----------------------------------------------------------------------------
+app_widgetMain::~app_widgetMain()
+{
+  m_timer.stop();
 }
 
 //-----------------------------------------------------------------------------
@@ -203,4 +212,11 @@ void app_widgetMain::onRemove()
 //-----------------------------------------------------------------------------
 void app_widgetMain::onSave()
 {
+}
+
+//-----------------------------------------------------------------------------
+void app_widgetMain::onTimer()
+{
+  m_frequencyLbl->setText(QString::number(m_model->getFrequency()));
+  dynamic_cast<app_tableModel*>(m_modelTable->model())->emitModelChanged();
 }
