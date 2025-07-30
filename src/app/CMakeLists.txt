@@ -1,14 +1,21 @@
 project(sampleSQLite LANGUAGES CXX)
 
 qt_add_executable(${PROJECT_NAME}
+    app_tableModel.cpp
+    app_tableModel.h
     app_widgetMain.cpp
     app_widgetMain.h
+    main.cpp
+    model_counters.cpp
+    model_counters.h
     model_dataBase.cpp
     model_dataBase.h
-    main.cpp
+    thread_manager.cpp
+    thread_manager.h
 )
+
 target_include_directories(${PROJECT_NAME} PUBLIC
-    /src
+    .
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC

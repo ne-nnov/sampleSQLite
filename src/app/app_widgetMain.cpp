@@ -7,6 +7,7 @@
 #include "app_widgetMain.h"
 
 // model includes
+#include "model_counters.h"
 #include "model_dataBase.h"
 
 // Qt includes
@@ -33,4 +34,10 @@ app_widgetMain::app_widgetMain(QWidget* parent)
   view->setModel(model);
 
   layout->addWidget(view);
+}
+
+//-----------------------------------------------------------------------------
+void app_widgetMain::setModel(model_counters* model)
+{
+  m_model = model;
 }
