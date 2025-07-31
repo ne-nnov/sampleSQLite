@@ -93,7 +93,7 @@ private:
 
   QTimer          m_timer;        //!< timer to update UI controls by the model.
   QTime           m_timeStart;    //!< t0, the time of thread counter start.
-  double          m_countersSumStart; //!< frequency at t0.
+  int             m_countersSumStart; //!< frequency at t0.
 
   QLabel*         m_frequencyLbl; //!< control showing the current frequency value.
 

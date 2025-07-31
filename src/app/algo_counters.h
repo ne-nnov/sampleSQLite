@@ -15,5 +15,5 @@ public:
   //! Computes the arithmetic sum.
   //! @param values container of values.
   //! @return sum of values.
-  static double arithmeticSum(const CountersMap& values);
+  static int arithmeticSum(const CountersMap& values);
 };

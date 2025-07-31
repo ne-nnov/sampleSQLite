@@ -299,12 +299,15 @@ void app_widgetMain::updateControls()
 {
   QTime curTime = QTime::currentTime();
   double timeFromStart = m_timeStart.secsTo(curTime);
-
-  double countersSum = algo_counters::arithmeticSum(m_model->getCounters());
+  double frequency = 0;
+  if (timeFromStart > 0)
+  {
+    int countersSum = algo_counters::arithmeticSum(m_model->getCounters());
 #ifdef DEBUG_CODE
-  std::cout << "frequency = " << countersSum << " - " << m_countersSumStart << " / " << timeFromStart << std::endl;
+    std::cout << "frequency = " << countersSum << " - " << m_countersSumStart << " / " << timeFromStart << std::endl;
 #endif
-  double frequency = timeFromStart > 0 ? (countersSum - m_countersSumStart) / timeFromStart : 0;
+    frequency = (double)(countersSum - m_countersSumStart) / timeFromStart;
+  }
 
   m_frequencyLbl->setText(QString::number(frequency, 'g', 10));
   m_secondsInfoLbl->setText(QString("sec: %1").arg(timeFromStart));
