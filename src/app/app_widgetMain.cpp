@@ -119,7 +119,6 @@ app_widgetMain::app_widgetMain(QWidget* parent, bool advancedMode)
   layout->addWidget(m_saveBtn,   5, 2);
 
   connect(&m_timer, SIGNAL(timeout()), SLOT(onTimer()));
-  m_timer.start(100);
 }
 
 //-----------------------------------------------------------------------------
@@ -158,6 +157,7 @@ void app_widgetMain::onStart()
   m_countersSumStartEdt->setText(QString::number(m_countersSumStart, 'g', 10));
 
   m_threadManager->startCounters();
+  m_timer.start(100);
 }
 
 //-----------------------------------------------------------------------------
@@ -168,6 +168,8 @@ void app_widgetMain::onStop()
 
   m_threadManager->stopCounters();
   updateControls();
+
+  m_timer.stop();
 }
 
 //-----------------------------------------------------------------------------
