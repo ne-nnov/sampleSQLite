@@ -20,13 +20,20 @@ class thread_manager
 public:
   //! Constructor.
   //! @param[in] model A model to be modified by thread calls.
-  thread_manager(model_counters* model);
+  thread_manager();
 
   //! Destructor.
-  ~thread_manager() {}
+  ~thread_manager();
+
+  //! Set the source data model.
+  //! @param[in] model Data retrieval model.
+  void setModel(model_counters* model) { m_model = model; }
 
   //! It creates an instance of a thread and starts it.
   void launchThread();
+
+  //! Returns true if the counters are started.
+  bool isStarted() const;
 
   //! Stops the counters increase.
   void stopCounters();

@@ -41,7 +41,7 @@ public:
   virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
 
   //! Returns the data stored under the given role for the item referred to by the index.
-  //! @param[in] parent index that indicates the location of an item in the model.
+  //! @param[in] index index that indicates the location of an item in the model.
   //! @param[in] role type of returned value. It can be text, decoration role, style of the item.
   //! @return value for the item.
   virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
@@ -51,6 +51,10 @@ public:
   //! @param[in] orientation the header orientation.
   //! @return header value for the item.
   virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+
+  //! Returns the item flags for the given index.
+  //! @param[in] index index that indicates the location of an item in the model.
+  virtual Qt::ItemFlags flags(const QModelIndex& theIndex) const;
 
 private:
   model_counters* m_model;        //!< model containing the current counter data.

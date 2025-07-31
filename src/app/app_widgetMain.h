@@ -8,11 +8,13 @@
 // Qt includes
 #include <QWidget>
 #include <QTimer>
+#include <QTime>
 
 class model_counters;
 class thread_manager;
 
 class QLabel;
+class QLineEdit;
 class QPushButton;
 class QTableView;
 
@@ -42,8 +44,11 @@ public:
   //! @param[in] manager thread management controller.
   void setThreadManager(thread_manager* manager);
 
-  //! Updates text of label, that shows frequency value.
-  void updateFrequency();
+  //! Starts the thread manager.
+  void startCounters();
+
+  //! Updates the table view and frequency control values.
+  void updateControls();
 
 private slots:
   //! Starts counters increase. (Available only in 'advanced' mode)
@@ -71,6 +76,8 @@ private:
   thread_manager* m_threadManager; //!< thread management controller.
 
   QTimer          m_timer;        //!< timer to update UI controls by the model.
+  QTime           m_timeStart;    //!< t0, the time of thread counter start.
+  double          m_countersSumStart; //!< frequency at t0.
 
   QLabel*         m_frequencyLbl; //!< control showing the current frequency value.
 
@@ -79,8 +86,10 @@ private:
 
   QPushButton*    m_startBtn;     //!< control starting counter increase.
   QPushButton*    m_stopBtn;      //!< control to stop counter increase.
-  QPushButton*    m_addManyBtn;   //!< control to add many rows in the table.
   QPushButton*    m_dbTableBtn;   //!< control to show control showing SQLite table.
+  QPushButton*    m_addManyBtn;   //!< control to add many rows in the table.
+  QLineEdit*      m_countersSumStartEdt; //!< control showing sum of counters at t0.
+  QLabel*         m_secondsInfoLbl; //!< control showing seconds since system start.
 
   QPushButton*    m_addBtn;       //!< control to add a new row in the table.
   QPushButton*    m_removeBtn;    //!< control to remove the selected row from the table.

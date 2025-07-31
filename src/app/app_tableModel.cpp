@@ -39,7 +39,10 @@ int app_tableModel::columnCount(const QModelIndex& parent) const
 //-----------------------------------------------------------------------------
 QVariant app_tableModel::data(const QModelIndex& index, int role) const
 {
-  if (!m_model || role != Qt::DisplayRole)
+  if (!m_model)
+    return QVariant();
+
+  if (role != Qt::DisplayRole && role != Qt::EditRole)
     return QVariant();
 
   if (index.row() > m_model->getCounters().size())
@@ -55,4 +58,14 @@ QVariant app_tableModel::headerData(int section, Qt::Orientation orientation, in
     return "Counter";
 
   return QAbstractTableModel::headerData(section, orientation, role);
+}
+
+//--------------------------------------------------------------------------------------
+Qt::ItemFlags app_tableModel::flags(const QModelIndex& theIndex) const
+{
+  if (!theIndex.isValid())
+    return Qt::NoItemFlags;
+
+  Qt::ItemFlags aFlags = Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+  return aFlags;
 }

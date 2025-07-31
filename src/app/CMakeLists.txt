@@ -1,6 +1,8 @@
 project(sampleSQLite LANGUAGES CXX)
 
 qt_add_executable(${PROJECT_NAME}
+    algo_counters.cpp
+    algo_counters.h
     app_tableModel.cpp
     app_tableModel.h
     app_widgetMain.cpp

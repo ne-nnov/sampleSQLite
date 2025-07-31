@@ -16,10 +16,21 @@
 #include <thread>
 
 //-----------------------------------------------------------------------------
-thread_manager::thread_manager(model_counters* model)
-: m_model(model),
+thread_manager::thread_manager()
+: m_model(nullptr),
   m_countersActive(false)
 {
+}
+
+//-----------------------------------------------------------------------------
+thread_manager::~thread_manager()
+{
+}
+
+//-----------------------------------------------------------------------------
+bool thread_manager::isStarted() const
+{
+  return m_countersActive;
 }
 
 //-----------------------------------------------------------------------------
@@ -46,9 +57,11 @@ void thread_manager::incrementCounters()
 {
   while (true)
   {
-    if (!m_countersActive)
+    if (!m_model)
       continue;
 
+    if (!m_countersActive)
+      continue;
     m_model->incrementCounters();
   }
 }
