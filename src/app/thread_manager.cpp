@@ -18,7 +18,8 @@
 //-----------------------------------------------------------------------------
 thread_manager::thread_manager()
 : m_model(nullptr),
-  m_countersActive(false)
+  m_countersActive(false),
+  m_countersDone(true)
 {
 }
 
@@ -28,16 +29,22 @@ thread_manager::~thread_manager()
 }
 
 //-----------------------------------------------------------------------------
+void thread_manager::launchThread()
+{
+  std::thread t1(&thread_manager::incrementCounters, this);
+  t1.detach();
+}
+
+//-----------------------------------------------------------------------------
 bool thread_manager::isStarted() const
 {
   return m_countersActive;
 }
 
 //-----------------------------------------------------------------------------
-void thread_manager::launchThread()
+bool thread_manager::isCountersDone() const
 {
-  std::thread t1(&thread_manager::incrementCounters, this);
-  t1.detach();
+  return m_countersDone;
 }
 
 //-----------------------------------------------------------------------------
@@ -62,6 +69,8 @@ void thread_manager::incrementCounters()
 
     if (!m_countersActive)
       continue;
+    m_countersDone = false;
     m_model->incrementCounters();
+    m_countersDone = true;
   }
 }

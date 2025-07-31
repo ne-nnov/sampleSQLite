@@ -25,11 +25,11 @@ int main(int argc, char* argv[])
 {
   QApplication app(argc, argv);
 
+  // Loads SQLite data base.
   model_dataBase::connectToDatabase(app_widgetMain::dataBaseFileName());
 
-  // Create data model
+  // Creates data model
   model_counters* model = new model_counters();
-
   model->setCounters(model_dataBase::getCounters());
 
   // Constructs the new thread and runs it. Does not block execution.
@@ -37,22 +37,26 @@ int main(int argc, char* argv[])
   thmanager->setModel(model);
   thmanager->launchThread();
 
+  // Creates the main widget of the application.
   app_widgetMain* mainWidget = new app_widgetMain(0, true);
   mainWidget->setModel(model);
   mainWidget->setThreadManager(thmanager);
 
-  //mainWidget->startCounters();
+  // Launches counters increase process.
+  mainWidget->startCounters();
 
+  // Shows main widget.
   mainWidget->resize(300, 600);
   mainWidget->show();
 
   int state = app.exec();
 
+  // Clears resources.
   thmanager->setModel(nullptr);
   thmanager->stopCounters();
-
   delete model;
   delete thmanager;
+  delete mainWidget;
 
   return state;
 }

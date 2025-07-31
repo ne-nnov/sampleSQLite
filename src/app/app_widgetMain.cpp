@@ -19,6 +19,7 @@
 
 // Qt includes
 #include <QCoreApplication>
+#include <QCloseEvent>
 #include <QGridLayout>
 #include <QHeaderView>
 #include <QLabel>
@@ -146,6 +147,26 @@ void app_widgetMain::setThreadManager(thread_manager* manager)
 void app_widgetMain::startCounters()
 {
   onStart();
+}
+
+//-----------------------------------------------------------------------------
+void app_widgetMain::closeEvent(QCloseEvent* event)
+{
+  event->ignore();
+
+  // wait until thread completes the current task.
+  m_threadManager->setModel(nullptr);
+  m_threadManager->stopCounters();
+  int counter = 0;
+  while (!m_threadManager->isCountersDone())
+  {
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+
+    if (counter++ > 1000) break;
+  }
+
+  // close the application
+  qApp->exit();
 }
 
 //-----------------------------------------------------------------------------

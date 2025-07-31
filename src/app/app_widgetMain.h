@@ -13,6 +13,7 @@
 class model_counters;
 class thread_manager;
 
+class QCloseEvent;
 class QLabel;
 class QLineEdit;
 class QPushButton;
@@ -21,9 +22,12 @@ class QTableView;
 //! This class creates the application's main window and contains a table along with
 //! buttons for interacting with it. The buttons provide functionality to:
 //! add a row, delete a row, and save data to the database.
-//! Additionaly the advanced mode is impelemented. It contains actions to:
+//! There is 'More' check button to show additional controls:
 //! - stop/start counters;
-//! - display the data base table content.
+//! - display the data base table content;
+//! - button to add 1000 rows immediatelly;
+//! - sum of counters in t0;
+//! - t1-t0 value in seconds.
 class app_widgetMain : public QWidget
 {
   Q_OBJECT
@@ -52,6 +56,12 @@ public:
 
   //! Returns the complete path to the database file.
   static QString dataBaseFileName();
+
+protected:
+  //! This event handler is called with the given event when Qt receives a window close request for a top
+  //! - level widget from the window system.
+  //! Blocks execution until the thread manager completes the current task. Then the execution goes to the parent.
+  virtual void closeEvent(QCloseEvent* event);
 
 private slots:
   //! Starts counters increase. (Available only in 'advanced' mode)

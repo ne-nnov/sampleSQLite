@@ -35,6 +35,9 @@ public:
   //! Returns true if the counters are started.
   bool isStarted() const;
 
+  //! Returns true if previous incrementCounters for model finished and new one hasn't begun.
+  bool isCountersDone() const;
+
   //! Stops the counters increase.
   void stopCounters();
 
@@ -48,4 +51,5 @@ protected:
 private:
   model_counters* m_model; //!< model to be modified by thread calls.
   std::atomic<bool> m_countersActive; //!< state whether the counters are increased at the moment.
+  std::atomic<bool> m_countersDone;   //!< state whether the previous increment finished and new one hasn't begun.
 };
