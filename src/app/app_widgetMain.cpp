@@ -18,9 +18,11 @@
 #include "thread_manager.h"
 
 // Qt includes
+#include <QCheckBox>
 #include <QCoreApplication>
 #include <QCloseEvent>
 #include <QGridLayout>
+#include <QGroupBox>
 #include <QHeaderView>
 #include <QLabel>
 #include <QLineEdit>
@@ -36,7 +38,7 @@ const int ADD_MANY_VALUES = 1000;
 //#define DEBUG_CODE
 
 //-----------------------------------------------------------------------------
-app_widgetMain::app_widgetMain(QWidget* parent, bool advancedMode)
+app_widgetMain::app_widgetMain(QWidget* parent)
   : QWidget(parent),
   m_model(nullptr),
   m_threadManager(nullptr),
@@ -66,44 +68,53 @@ app_widgetMain::app_widgetMain(QWidget* parent, bool advancedMode)
   layout->addWidget(m_modelTable, 1, 0, 1, 3);
 
   // stop/start buttons
-  if (advancedMode)
+  m_additionalChk = new QCheckBox("More", this);
+  m_additionalChk->setChecked(false);
+  connect(m_additionalChk, SIGNAL(clicked()), this, SLOT(onMore()));
+  layout->addWidget(m_additionalChk, 2, 0, 1, 3);
+
+  m_additionalGroupBox = new QGroupBox(this);
+  onMore();
+  layout->addWidget(m_additionalGroupBox, 3, 0, 1, 3);
+  QGridLayout* addlayout = new QGridLayout(m_additionalGroupBox);
+  addlayout->setContentsMargins(2, 2, 2, 2);
   {
-    m_startBtn = new QPushButton("start", this);
-    m_stopBtn = new QPushButton("stop", this);
-    m_dbTableBtn = new QPushButton("SQLite", this);
+    m_startBtn = new QPushButton("start", m_additionalGroupBox);
+    m_stopBtn = new QPushButton("stop", m_additionalGroupBox);
+    m_dbTableBtn = new QPushButton("SQLite", m_additionalGroupBox);
     m_dbTableBtn->setCheckable(true);
     m_dbTableBtn->setChecked(false);
-    m_addManyBtn = new QPushButton("add 1000", this);
+    m_addManyBtn = new QPushButton("add 1000", m_additionalGroupBox);
 
-    m_countersSumStartEdt = new QLineEdit(this);
+    m_countersSumStartEdt = new QLineEdit(m_additionalGroupBox);
     m_countersSumStartEdt->setToolTip("sum of counts at t0");
 
-    m_secondsInfoLbl = new QLabel("sec: ", this);
+    m_secondsInfoLbl = new QLabel("sec: ", m_additionalGroupBox);
 
     connect(m_startBtn, SIGNAL(clicked()), this, SLOT(onStart()));
     connect(m_stopBtn, SIGNAL(clicked()), this, SLOT(onStop()));
     connect(m_dbTableBtn, SIGNAL(clicked()), this, SLOT(onSQLite()));
     connect(m_addManyBtn, SIGNAL(clicked()), this, SLOT(onAddMany()));
 
-    layout->addWidget(m_startBtn, 2, 0);
-    layout->addWidget(m_stopBtn, 2, 1);
-    layout->addWidget(m_dbTableBtn, 2, 2);
+    addlayout->addWidget(m_startBtn, 0, 0);
+    addlayout->addWidget(m_stopBtn, 0, 1);
+    addlayout->addWidget(m_dbTableBtn, 0, 2);
 
-    layout->addWidget(m_addManyBtn, 3, 0);
-    layout->addWidget(m_countersSumStartEdt, 3, 1);
-    layout->addWidget(m_secondsInfoLbl, 3, 2);
+    addlayout->addWidget(m_addManyBtn, 1, 0);
+    addlayout->addWidget(m_countersSumStartEdt, 1, 1);
+    addlayout->addWidget(m_secondsInfoLbl, 1, 2);
 
     // data base's content table
-    QSqlTableModel* model = new QSqlTableModel(this);
+    QSqlTableModel* model = new QSqlTableModel(m_additionalGroupBox);
     model->setTable(model_dataBase::tableName());
     model->setEditStrategy(QSqlTableModel::OnManualSubmit);
     model->select();
     model->setHeaderData(0, Qt::Horizontal, QObject::tr("Key"));
     model->setHeaderData(1, Qt::Horizontal, QObject::tr("Counter"));
 
-    m_SQLiteTable = new QTableView(this);
+    m_SQLiteTable = new QTableView(m_additionalGroupBox);
     m_SQLiteTable->setModel(model);
-    layout->addWidget(m_SQLiteTable, 4, 0, 1, 3);
+    addlayout->addWidget(m_SQLiteTable, 2, 0, 1, 3);
     onSQLite();
   }
 
@@ -116,9 +127,9 @@ app_widgetMain::app_widgetMain(QWidget* parent, bool advancedMode)
   connect(m_removeBtn, SIGNAL(clicked()), this, SLOT(onRemove()));
   connect(m_saveBtn, SIGNAL(clicked()), this, SLOT(onSave()));
 
-  layout->addWidget(m_addBtn,    5, 0);
-  layout->addWidget(m_removeBtn, 5, 1);
-  layout->addWidget(m_saveBtn,   5, 2);
+  layout->addWidget(m_addBtn,    4, 0);
+  layout->addWidget(m_removeBtn, 4, 1);
+  layout->addWidget(m_saveBtn,   4, 2);
 
   connect(&m_timer, SIGNAL(timeout()), SLOT(onTimer()));
 }
@@ -167,6 +178,12 @@ void app_widgetMain::closeEvent(QCloseEvent* event)
 
   // close the application
   qApp->exit();
+}
+
+//-----------------------------------------------------------------------------
+void app_widgetMain::onMore()
+{
+  m_additionalGroupBox->setVisible(m_additionalChk->isChecked());
 }
 
 //-----------------------------------------------------------------------------

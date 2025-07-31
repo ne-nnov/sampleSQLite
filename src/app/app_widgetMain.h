@@ -13,7 +13,9 @@
 class model_counters;
 class thread_manager;
 
+class QCheckBox;
 class QCloseEvent;
+class QGroupBox;
 class QLabel;
 class QLineEdit;
 class QPushButton;
@@ -35,8 +37,7 @@ class app_widgetMain : public QWidget
 public:
   //! Constructor.
   //! @param[in] parent parent widget.
-  //! @param[in] advancedMode flag whether auxiliary controls are shown.
-  app_widgetMain(QWidget* parent, bool advancedMode);
+  app_widgetMain(QWidget* parent = 0);
   //! Destructor.
   ~app_widgetMain();
 
@@ -64,6 +65,8 @@ protected:
   virtual void closeEvent(QCloseEvent* event);
 
 private slots:
+  //!< Shows additional UI controls.
+  void onMore();
   //! Starts counters increase. (Available only in 'advanced' mode)
   void onStart();
   //! Stops counters increase. (Available only in 'advanced' mode)
@@ -96,6 +99,9 @@ private:
 
   QTableView*     m_modelTable;   //!< control showing the current counter data.
   QTableView*     m_SQLiteTable;  //!< control showing SQLite data base data.
+
+  QCheckBox*      m_additionalChk; //!< control to use additional UI controls.
+  QGroupBox*      m_additionalGroupBox; //!< group box of additional UI controls.
 
   QPushButton*    m_startBtn;     //!< control starting counter increase.
   QPushButton*    m_stopBtn;      //!< control to stop counter increase.

@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
   thmanager->launchThread();
 
   // Creates the main widget of the application.
-  app_widgetMain* mainWidget = new app_widgetMain(0, true);
+  app_widgetMain* mainWidget = new app_widgetMain();
   mainWidget->setModel(model);
   mainWidget->setThreadManager(thmanager);
 
