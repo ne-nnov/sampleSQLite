@@ -25,13 +25,12 @@ int main(int argc, char* argv[])
 {
   QApplication app(argc, argv);
 
-  QString dataBasePath = QCoreApplication::applicationDirPath();
-  QString dataBaseFileName = dataBasePath + "/" + model_dataBase::dataBaseName();
-
-  model_dataBase::connectToDatabase(dataBaseFileName, true);
+  model_dataBase::connectToDatabase(app_widgetMain::dataBaseFileName());
 
   // Create data model
   model_counters* model = new model_counters();
+
+  model->setCounters(model_dataBase::getCounters());
 
   // Constructs the new thread and runs it. Does not block execution.
   thread_manager* thmanager = new thread_manager();
@@ -42,7 +41,7 @@ int main(int argc, char* argv[])
   mainWidget->setModel(model);
   mainWidget->setThreadManager(thmanager);
 
-  mainWidget->startCounters();
+  //mainWidget->startCounters();
 
   mainWidget->resize(300, 600);
   mainWidget->show();

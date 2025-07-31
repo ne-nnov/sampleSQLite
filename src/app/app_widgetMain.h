@@ -50,6 +50,9 @@ public:
   //! Updates the table view and frequency control values.
   void updateControls();
 
+  //! Returns the complete path to the database file.
+  static QString dataBaseFileName();
+
 private slots:
   //! Starts counters increase. (Available only in 'advanced' mode)
   void onStart();

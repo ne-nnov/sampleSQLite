@@ -18,6 +18,7 @@
 #include "thread_manager.h"
 
 // Qt includes
+#include <QCoreApplication>
 #include <QGridLayout>
 #include <QHeaderView>
 #include <QLabel>
@@ -132,6 +133,7 @@ void app_widgetMain::setModel(model_counters* model)
 {
   m_model = model;
   dynamic_cast<app_tableModel*>(m_modelTable->model())->setModel(model);
+  updateControls();
 }
 
 //-----------------------------------------------------------------------------
@@ -236,6 +238,13 @@ void app_widgetMain::onRemove()
 //-----------------------------------------------------------------------------
 void app_widgetMain::onSave()
 {
+  model_dataBase::setCounters(m_model->getCounters());
+
+  QSqlTableModel* model = (QSqlTableModel*)(m_SQLiteTable->model());
+  model->setTable(model_dataBase::tableName());
+  model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+  model->select();
+  m_SQLiteTable->setModel(model);
 }
 
 //-----------------------------------------------------------------------------
@@ -262,4 +271,11 @@ void app_widgetMain::updateControls()
   m_frequencyLbl->setText(QString::number(frequency, 'g', 10));
   m_secondsInfoLbl->setText(QString("sec: %1").arg(timeFromStart));
   dynamic_cast<app_tableModel*>(m_modelTable->model())->emitModelChanged();
+}
+
+//-----------------------------------------------------------------------------
+QString app_widgetMain::dataBaseFileName()
+{
+  QString dataBasePath = QCoreApplication::applicationDirPath();
+  return dataBasePath + "/" + model_dataBase::dataBaseName();
 }

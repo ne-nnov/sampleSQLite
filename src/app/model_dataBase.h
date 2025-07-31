@@ -8,6 +8,9 @@
 //! Qt includes
 #include <QString>
 
+//! model includes
+#include <model_counters.h>
+
 //! The class implements interaction with an SQLite database and provides an interface
 //! for accessing the required data.
 class model_dataBase
@@ -20,11 +23,16 @@ public:
 
   //! It connects the application to SQLite data base.
   //! @param[in] fileName A name of the data base.
-  //! @param[in] toInit flag whether to init the data base with default values.
   //! @return boolean value of open success.
+  static bool connectToDatabase(const QString& fileName);
 
-  static bool connectToDatabase(const QString& fileName,
-                                const bool     toInit);
+  //! Returns the SQL data base table values.
+  //! @return container of values.
+  static CountersMap getCounters();
+
+  //! Fills the SQL data base table with values.
+  //! @param values container of values.
+  static void setCounters(const CountersMap& values);
 
   //! Returns the name of the data base main table.
   static QString tableName() { return "Counter"; }

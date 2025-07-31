@@ -52,6 +52,14 @@ bool model_counters::removeCounter(const int position)
 }
 
 //-----------------------------------------------------------------------------
+void model_counters::setCounters(const CountersMap& values)
+{
+  m_mutex.lock();
+  m_counters = values;
+  m_mutex.unlock();
+}
+
+//-----------------------------------------------------------------------------
 void model_counters::incrementCounters()
 {
   m_mutex.lock();

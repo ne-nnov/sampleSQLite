@@ -37,6 +37,10 @@ public:
   //! Returns the current model values.
   const CountersMap& getCounters() const { return m_counters; }
 
+  //! Fills the current model counters by values.
+  //! @param values container of values
+  void setCounters(const CountersMap& values);
+
   //! Increments all values in the conteriner of counters.
   void incrementCounters();
 
