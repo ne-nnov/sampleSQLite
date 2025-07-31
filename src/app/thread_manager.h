@@ -5,8 +5,6 @@
 
 #pragma once
 
-// Qt includes
-
 // STL includes
 #include <atomic>
 #include <string>

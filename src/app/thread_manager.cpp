@@ -9,8 +9,6 @@
 // model includes
 #include <model_counters.h>
 
-// Qt includes
-
 // STL includes
 #include <iostream>
 #include <thread>
